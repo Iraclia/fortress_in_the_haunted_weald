@@ -25,7 +25,7 @@ def welcome():
 
     rule_check = input("Would you like to read the rules? (Y/N) \n")
     if rule_check in positives:
-        print ("\nOkay! This is a text adventure game. As the scenes are described, you will be prompted to make choices, find items, and traverse through the rooms in search of the treasure. Type your response when promted and hit enter to continue to the next step. Have fun! \n\n*** Disclaimer: Lots of reading involved. :) ***")
+        print ("\nThis is a text adventure game. As the scenes are described, you will be prompted to make choices, find items, and traverse through the rooms in search of a treasure. Type the number of your response when promted and hit enter to continue to the next step. Have fun! \n\n*** Disclaimer: Lots of reading involved. :) ***")
 
     user_name = input("\nWhat is your name, adventurer? ")
     user_info = Adventurer(user_name)
@@ -38,10 +38,12 @@ def begin_adventuring(player):
     if intro not in player.visited:
         player.room_visited(intro)
         print(intro)
+        print(player.__repr__())
+        intro_pick = input(intro_choices)
     else:
         print(intro_return)
-    print(player.__repr__())
-    intro_pick = input(intro_choices)
+        print(player.__repr__())
+        intro_pick = input(intro_choices_return)
     intro_options = ["1", "2"]
     while intro_pick not in intro_options:
         intro_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
@@ -75,22 +77,38 @@ def pick_guard_room():
     if guard_room not in player.visited:
         player.room_visited(guard_room)
         print(guard_room)
+        print(player.__repr__())
+        guard_room_pick = input(guard_room_choices)
+        guard_room_options = ["1", "2"]
+        while guard_room_pick not in guard_room_options:
+            guard_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
+        if guard_room_pick == "1":
+            player.add_item("crowbar")
+            pick_enter_fortress()
+        elif guard_room_pick == "2":
+            pick_enter_fortress()
     else:
         if "crowbar" in player.items:
             print(guard_room_return_with_crowbar)
+            print(player.__repr__())
+            guard_room_pick = input(guard_room_choices_crowbar)
+            while guard_room_pick != "1":
+                guard_room_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
+            if guard_room_pick == "1":
+                pick_enter_fortress()
         else:
             print(guard_room_return_no_crowbar)
-    print(player.__repr__())
-    guard_room_pick = input(guard_room_choices)
-    guard_room_options = ["1", "2"]
-    while guard_room_pick not in guard_room_options:
-        guard_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
-    if guard_room_pick == "1":
-        player.add_item("crowbar")
-        pick_enter_fortress()
-    elif guard_room_pick == "2":
-        pick_enter_fortress()
-
+            print(player.__repr__())
+            guard_room_pick = input(guard_room_choices)
+            guard_room_options = ["1", "2"]
+            while guard_room_pick not in guard_room_options:
+                guard_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
+            if guard_room_pick == "1":
+                player.add_item("crowbar")
+                pick_enter_fortress()
+            elif guard_room_pick == "2":
+                pick_enter_fortress()
+    
 def pick_round_hall():
     if round_hall not in player.visited:
         player.room_visited(round_hall)
@@ -115,22 +133,49 @@ def pick_shrine():
     if shrine not in player.visited:
         player.room_visited(shrine)
         print(shrine)
+        print(player.__repr__())
+        shrine_pick = input(shrine_choices)
+        shrine_options = ["1", "2"]
+        while shrine_pick not in shrine_options:
+            shrine_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
+        if shrine_pick == "1":
+            if "stone seed" in player.items:
+                player.remove_item("stone seed")
+                player.add_item("key")
+                print("\nHesitantly, with your attention half on the woman's face in case those pale eyes -do- open, you reach out to take the key. Despite her seemingly loose hold on it, it doesn't move. You stare a moment, eyes falling to the inscription. That stone seed you found in the barracks is remarkably lifelike... and perhaps a symbol of hope? You place it in the statues open hand and nearly jump out of your skin as the fingers of the statue tighten its grip in the seed, even as she loosens her hold on the key. Heart pounding, you hurriedly grab the key before she changes her mind and beat a hasty retreat out of the statue's field of vision and into the round hall again before you take a breath.\n")
+                pick_round_hall()
+            else:
+                print("\nHesitantly, with your attention half on the woman's face in case those pale eyes -do- open, you reach out to take the key. Despite her seemingly loose hold on it, it doesn't move. You stare a moment, eyes falling to the inscription. Maybe she wants something in return? You're not sure what but it feels like she is waiting for you to do something... \n")
+                pick_shrine()
+        elif shrine_pick == "2":
+            pick_round_hall()
     else:
         if "key" in player.items:
             print(shrine_return_with_key)
+            print(player.__repr__())
+            shrine_pick = input(shrine_choices_key)
+            while shrine_pick != "1":
+                shrine_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
+            if shrine_pick == "1":
+                pick_round_hall()
         else:
             print(shrine_return_no_key)
-    print(player.__repr__())
-    shrine_pick = input(shrine_choices)
-    shrine_options = ["1", "2"]
-    while shrine_pick not in shrine_options:
-        shrine_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
-    if shrine_pick == "1":
-        player.add_item("key")
-        print("\nHesitantly, with your attention half on the woman's face in case those pale eyes -do- open, you reach out to take the key. It seems to resist just a moment before slipping free of her stone fingers. You beat a hasty retreat out of the statue's field of vision and into the round hall again before you take a breath.\n")
-        pick_round_hall()
-    elif shrine_pick == "2":
-        pick_round_hall()
+            print(player.__repr__())
+            shrine_pick = input(shrine_choices)
+            shrine_options = ["1", "2"]
+            while shrine_pick not in shrine_options:
+                shrine_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
+            if shrine_pick == "1":
+                if "stone seed" in player.items:
+                    player.remove_item("stone seed")
+                    player.add_item("key")
+                    print("\nHesitantly, with your attention half on the woman's face in case those pale eyes -do- open, you reach out to take the key. Despite her seemingly loose hold on it, it doesn't move. You stare a moment, eyes falling to the inscription. That stone seed you found in the barracks is remarkably lifelike... and perhaps a symbol of hope? You place it in the statues open hand and nearly jump out of your skin as the fingers of the statue tighten its grip in the seed, even as she loosens her hold on the key. Heart pounding, you hurriedly grab the key before she changes her mind and beat a hasty retreat out of the statue's field of vision and into the round hall again before you take a breath.\n")
+                    pick_round_hall()
+                else:
+                    print("\nHesitantly, with your attention half on the woman's face in case those pale eyes -do- open, you reach out to take the key. Despite her seemingly loose hold on it, it doesn't move. You stare a moment, eyes falling to the inscription. Maybe she wants something in return? You're not sure what but it feels like she is waiting for you to do something... \n")
+                    pick_shrine()
+            elif shrine_pick == "2":
+                pick_round_hall()
 
 def pick_reception_room():
     if reception_room not in player.visited:
@@ -187,24 +232,45 @@ def pick_library():
     if library not in player.visited:
         player.room_visited(library)
         print(library.format(player.name))
+        print(player.__repr__())
+        library_pick = input(library_choices)
+        library_options = ["1", "2"]
+        while library_pick not in library_options:
+            library_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
+        if library_pick == "1":
+            player.add_item("scroll")
+            pick_lower_corridor()
+        elif library_pick == "2":
+            pick_lower_corridor()
     else:
         if "scroll" in player.items:
             print(library_return_with_scroll)
+            print(player.__repr__())
+            library_pick = input(library_choices_took_scroll)
+            while library_pick != "1":
+                library_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
+            if library_pick == "1":
+                pick_lower_corridor()
+        elif "ashes" in player.items:
+            print(library_return_scroll_used)
+            print(player.__repr__())
+            library_pick = input(library_choices_took_scroll)                
+            while library_pick != "1":
+                library_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
+            if library_pick == "1":
+                pick_lower_corridor()
         else:
-            if "ashes" in player.items:
-                print(library_return_scroll_used)
-            else:
-                print(library_return_no_scroll)
-    print(player.__repr__())
-    library_pick = input(library_choices)
-    library_options = ["1", "2"]
-    while library_pick not in library_options:
-        library_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
-    if library_pick == "1":
-        player.add_item("scroll")
-        pick_lower_corridor()
-    elif library_pick == "2":
-        pick_lower_corridor()
+            print(library_return_no_scroll.format(player.name))
+            print(player.__repr__())
+            library_pick = input(library_choices)
+            library_options = ["1", "2"]
+            while library_pick not in library_options:
+                library_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
+            if library_pick == "1":
+                player.add_item("scroll")
+                pick_lower_corridor()
+            elif library_pick == "2":                         
+                pick_lower_corridor()
 
 def pick_lower_hall():
     if lower_hall not in player.visited:
@@ -230,14 +296,45 @@ def pick_barracks():
     if barracks not in player.visited:
         player.room_visited(barracks)
         print(barracks)
+        print(player.__repr__())
+        barracks_pick = input(barracks_choices)
+        barracks_options = ["1", "2"]
+        while barracks_pick not in barracks_options:
+            barracks_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
+        if barracks_pick == "1":
+            player.add_item("stone seed")
+            pick_lower_hall()
+        elif barracks_pick == "2":
+            pick_lower_hall()
     else:
-        print(barracks_return)
-    print(player.__repr__())
-    barracks_pick = input(barracks_choices)
-    if barracks_pick != "1":
-        barracks_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
-    elif barracks_pick == "1":
-        pick_lower_hall()
+        if "stone seed" in player.items:
+            print(barracks_return_with_seed)
+            print(player.__repr__())
+            barracks_pick = input(barracks_choices_seed_taken)
+            while barracks_pick != "1":
+                barracks_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
+            if barracks_pick == "1":
+                pick_lower_hall()
+        elif "key" in player.items:
+            print(barracks_return_with_key)
+            print(player.__repr__())
+            barracks_pick = input(barracks_choices_seed_taken)
+            while barracks_pick != "1":
+                barracks_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
+            if barracks_pick == "1":
+                pick_lower_hall()
+        else:
+            print(barracks_return_no_seed_or_key)
+            print(player.__repr__())
+            barracks_pick = input(barracks_choices)
+            barracks_options = ["1", "2"]
+            while barracks_pick not in barracks_options:
+                barracks_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
+            if barracks_pick == "1":
+                player.add_item("stone seed")
+                pick_lower_hall()
+            elif barracks_pick == "2":
+                pick_lower_hall()
 
 def pick_mess_hall(): 
     if mess_hall not in player.visited:
@@ -249,7 +346,7 @@ def pick_mess_hall():
     mess_hall_pick = input(mess_hall_choices)
     mess_hall_options = ["1", "2"]
     while mess_hall_pick not in mess_hall_options:
-        mess_hall_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
+        mess_hall_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
     if mess_hall_pick == "1":
         print(kitchen.format(player.name))
         replay()
@@ -260,27 +357,52 @@ def pick_trapdoor_room():
     if trapdoor_room not in player.visited:
         player.room_visited(trapdoor_room)
         print(trapdoor_room)
+        print(player.__repr__())
+        trapdoor_room_pick = input(trapdoor_room_choices)
+        trapdoor_room_options = ["1", "2"]
+        while trapdoor_room_pick not in trapdoor_room_options:
+            trapdoor_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
+        if trapdoor_room_pick == "1":
+            if "crowbar" in player.items:
+                print(opening_trapdoor)
+                player.remove_item("crowbar")
+                player.add_item("broken crowbar")
+                pick_trapdoor_room()
+            else:
+                print(trapdoor_no_crowbar)
+                pick_trapdoor_room()
+        elif trapdoor_room_pick == "2":
+            pick_lower_hall()
     else:
         if "broken crowbar" in player.items:
             print(trapdoor_room_return_opened)
+            print(player.__repr__())
+            trapdoor_room_pick = input(trapdoor_room_choices_open)
+            trapdoor_room_options = ["1", "2"]
+            while trapdoor_room_pick not in trapdoor_room_options:
+                trapdoor_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
+            if trapdoor_room_pick == "1":
+                pick_base_of_ladder()
+            elif trapdoor_room_pick == "2":
+                pick_lower_hall()
         else:
             print(trapdoor_room_return_closed)
-    print(player.__repr__())
-    trapdoor_room_pick = input(trapdoor_room_choices)
-    trapdoor_room_options = ["1", "2"]
-    while trapdoor_room_pick not in trapdoor_room_options:
-        trapdoor_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
-    if trapdoor_room_pick == "1":
-        if "crowbar" in player.items:
-            print("The trapdoor is stubbornly wedged in place - age doesn't seem to have weakened the wood. If anything it has made the thing more difficult to get through. Luckily, you came prepared. You pull out the crowbar you found upstairs and throw your weight into prying the door open. The trapdoor resists, before it slowly starts to shift with an audible groan of protest. Then, with a thunderous snap and the sharp clatter of metal on stone, the door pops open. Your trusty crowbar, sadly, gave its life for the task. It didn't seem to have aged as well as the trapdoor itself.")
-            player.remove_item("crowbar")
-            player.add_item("broken crowbar")
-            pick_base_of_ladder()
-        else:
-            print("You push and pull and tug and stomp; you even try politely, and not so politely, asking the thing to open. But the trapdoor absolutely refuses to budge. If it had a face you imagine it would be laughing at your efforts. Maybe you need something to pry it open with... \n\n")
-            pick_trapdoor_room()
-    elif trapdoor_room_pick == "2":
-        pick_lower_hall()
+            print(player.__repr__())
+            trapdoor_room_pick = input(trapdoor_room_choices)
+            trapdoor_room_options = ["1", "2"]
+            while trapdoor_room_pick not in trapdoor_room_options:
+                trapdoor_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
+            if trapdoor_room_pick == "1":
+                if "crowbar" in player.items:
+                    print(opening_trapdoor)
+                    player.remove_item("crowbar")
+                    player.add_item("broken crowbar")
+                    pick_base_of_ladder()
+                else:
+                    print(trapdoor_no_crowbar)
+                    pick_trapdoor_room()
+            elif trapdoor_room_pick == "2":
+                pick_lower_hall()
 
 def pick_base_of_ladder(): 
     if base_of_ladder not in player.visited:
@@ -289,7 +411,10 @@ def pick_base_of_ladder():
     else:
         print(base_of_ladder_return)
     print(player.__repr__())
-    base_of_ladder_pick = input(base_of_ladder_choices)
+    if sudden_death_scroll in player.visited:
+        base_of_ladder_pick = input(base_of_ladder_choices_survivor)
+    else:
+        base_of_ladder_pick = input(base_of_ladder_choices)
     base_of_ladder_options = ["1", "2", "3"]
     while base_of_ladder_pick not in base_of_ladder_options:
         base_of_ladder_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
@@ -302,6 +427,7 @@ def pick_base_of_ladder():
 
 def pick_sudden_death():
     if "scroll" in player.items:
+        player.room_visited(sudden_death_scroll)
         print(sudden_death_scroll)
         player.remove_item("scroll")
         player.add_item("ashes")
@@ -327,7 +453,7 @@ def pick_treasure_room():
             player.remove_item("key")
             replay()
         else:
-            print("Closer examination of the chest reveals a keyhole in the center of the lid. Maybe you can get it open anyways... it's been down here for ages anyways, right? You push and tug and kick and even try asking it nicely (and not so nicely) to open. Seems like they had immpecable craftsmanship back in the day. Perhaps the key was left behind somewhere in the fortress...\n\n")
+            print(treasure_room_chest)
             pick_treasure_room()
     elif treasure_room_pick == "2":
         pick_base_of_ladder()
@@ -342,22 +468,29 @@ def pick_study_room():
     study_room_pick = input(study_room_choices)
     study_room_options = ["1", "2"]
     while study_room_pick not in study_room_options:
-        study_room_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
+        study_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
     if study_room_pick == "1":
         pick_lower_corridor()
     elif study_room_pick == "2":
-        print("\nYou step closer to the table and reach out to grab the pewter candlestick. You frown slightly when it won't move from it's spot, and tug a bit harder. It hold steadfastedly to the table. And it seems to be getting warmer under your fingers. No matter how hard you tug, the candlestick refuses to be moved, and eventually you have to give up the effort when the metal becomes too hot to touch. \n")
-        pick_study_room()
+        print(study_room_candle)
+        print(study_room_post_candle)
+        print(player.__repr__())
+        study_room_pick = input(study_room_choices_post_candle)
+        while study_room_pick != "1":
+            study_room_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
+        if study_room_pick == "1":
+            pick_lower_corridor()
 
 def replay():
-    positives = ["y", "Y", "yes", "Yes", "yeah", "Yeah", "sure", "Sure", "ok", "Ok", "yep", "Yep"]
-
     restart = input("\nWould you like to play again? (Y/N) ")
-    if restart in positives:
+    restart_options = ["y", "Y", "n", "N"]
+    while restart not in restart_options:
+        restart = input("Sorry, that is not a valid response. Please select Y or N to continue. ")
+    if restart == "y" or restart == "Y":
         player.items = []
         player.visited = []
-        begin_adventuring(player)
-    
+        begin_adventuring(player)        
+
 
 begin_adventuring(player)
 
@@ -367,15 +500,13 @@ begin_adventuring(player)
 - add check for exit words throughout
 - add additional rooms, etc
 - and/or additional interaction within rooms - opening cupboards, looking around/under things, etc
-  - maybe add a 'search' method to the adventurer class to do so?
-- add more items
+  - maybe add a 'search' method to the adventurer class to do so? to search rooms for things?
 - add more needed keys/items/etc
 - add more ways to die/lose
 - add puzzles?
 - add a time limit? tracked by number of turns
   - perhaps leading to an earthquake, etc, with warnings at certain thresholds to hint at such
 
-- perhaps you could change the story write-up so that when you revisit a room you get a paired down version of a story? add a list functionality to track rooms visited, if a room visited before use an alternative text?
 - perhaps add random endings? write up a few different endings, choose random number to pick which one you get
 - add an easter egg ^^
 '''
