@@ -142,10 +142,10 @@ def pick_shrine():
             if "stone seed" in player.items:
                 player.remove_item("stone seed")
                 player.add_item("key")
-                print("\nHesitantly, with your attention half on the woman's face in case those pale eyes -do- open, you reach out to take the key. Despite her seemingly loose hold on it, it doesn't move. You stare a moment, eyes falling to the inscription. That stone seed you found in the barracks is remarkably lifelike... and perhaps a symbol of hope? You place it in the statues open hand and nearly jump out of your skin as the fingers of the statue tighten its grip in the seed, even as she loosens her hold on the key. Heart pounding, you hurriedly grab the key before she changes her mind and beat a hasty retreat out of the statue's field of vision and into the round hall again before you take a breath.\n")
+                print(shrine_trade_key)
                 pick_round_hall()
             else:
-                print("\nHesitantly, with your attention half on the woman's face in case those pale eyes -do- open, you reach out to take the key. Despite her seemingly loose hold on it, it doesn't move. You stare a moment, eyes falling to the inscription. Maybe she wants something in return? You're not sure what but it feels like she is waiting for you to do something... \n")
+                print(shrine_key_stuck)
                 pick_shrine()
         elif shrine_pick == "2":
             pick_round_hall()
@@ -169,10 +169,10 @@ def pick_shrine():
                 if "stone seed" in player.items:
                     player.remove_item("stone seed")
                     player.add_item("key")
-                    print("\nHesitantly, with your attention half on the woman's face in case those pale eyes -do- open, you reach out to take the key. Despite her seemingly loose hold on it, it doesn't move. You stare a moment, eyes falling to the inscription. That stone seed you found in the barracks is remarkably lifelike... and perhaps a symbol of hope? You place it in the statues open hand and nearly jump out of your skin as the fingers of the statue tighten its grip in the seed, even as she loosens her hold on the key. Heart pounding, you hurriedly grab the key before she changes her mind and beat a hasty retreat out of the statue's field of vision and into the round hall again before you take a breath.\n")
+                    print(shrine_trade_key)
                     pick_round_hall()
                 else:
-                    print("\nHesitantly, with your attention half on the woman's face in case those pale eyes -do- open, you reach out to take the key. Despite her seemingly loose hold on it, it doesn't move. You stare a moment, eyes falling to the inscription. Maybe she wants something in return? You're not sure what but it feels like she is waiting for you to do something... \n")
+                    print(shrine_key_stuck)
                     pick_shrine()
             elif shrine_pick == "2":
                 pick_round_hall()
