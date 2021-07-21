@@ -311,7 +311,10 @@ def pick_lower_hall():
         player.room_visited(lower_hall)
         print(lower_hall)
     else:
-        print(lower_hall_return)
+        if trapdoor_room not in player.visited:
+            print(lower_hall_return)
+        else:
+            print(lower_hall_return_open_door)
     print(player.__repr__())
     lower_hall_pick = input(lower_hall_choices)
     if lower_hall_pick in exit_words:
