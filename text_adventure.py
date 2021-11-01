@@ -89,9 +89,22 @@ def pick_enter_fortress():
         begin_adventuring(player)
     
 def pick_guard_room():
-    if guard_room not in player.visited:
-        player.room_visited(guard_room)
-        print(guard_room)
+    if "crowbar" in player.items:
+        print(guard_room_return_with_crowbar)
+        print(player.__repr__())
+        guard_room_pick = input(guard_room_choices_crowbar)
+        if guard_room_pick in exit_words:
+            return
+        while guard_room_pick != "1":
+            guard_room_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
+        if guard_room_pick == "1":
+            pick_enter_fortress()
+    else:
+        if guard_room not in player.visited:
+            player.room_visited(guard_room)
+            print(guard_room)
+        else:
+            print(guard_room_return_no_crowbar)
         print(player.__repr__())
         guard_room_pick = input(guard_room_choices)
         guard_room_options = ["1", "2"]
@@ -104,31 +117,6 @@ def pick_guard_room():
             pick_enter_fortress()
         elif guard_room_pick == "2":
             pick_enter_fortress()
-    else:
-        if "crowbar" in player.items:
-            print(guard_room_return_with_crowbar)
-            print(player.__repr__())
-            guard_room_pick = input(guard_room_choices_crowbar)
-            if guard_room_pick in exit_words:
-                return
-            while guard_room_pick != "1":
-                guard_room_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
-            if guard_room_pick == "1":
-                pick_enter_fortress()
-        else:
-            print(guard_room_return_no_crowbar)
-            print(player.__repr__())
-            guard_room_pick = input(guard_room_choices)
-            guard_room_options = ["1", "2"]
-            if guard_room_pick in exit_words:
-                return
-            while guard_room_pick not in guard_room_options:
-                guard_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
-            if guard_room_pick == "1":
-                player.add_item("crowbar")
-                pick_enter_fortress()
-            elif guard_room_pick == "2":
-                pick_enter_fortress()
     
 def pick_round_hall():
     if round_hall not in player.visited:
@@ -153,9 +141,22 @@ def pick_round_hall():
         pick_enter_fortress()
 
 def pick_shrine():
-    if shrine not in player.visited:
-        player.room_visited(shrine)
-        print(shrine)
+    if "key" in player.items:
+        print(shrine_return_with_key)
+        print(player.__repr__())
+        shrine_pick = input(shrine_choices_key)
+        if shrine_pick in exit_words:
+            return
+        while shrine_pick != "1":
+            shrine_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
+        if shrine_pick == "1":
+            pick_round_hall()
+    else:
+        if shrine not in player.visited:
+            player.room_visited(shrine)
+            print(shrine)
+        else:
+            print(shrine_return_no_key)
         print(player.__repr__())
         shrine_pick = input(shrine_choices)
         shrine_options = ["1", "2"]
@@ -174,37 +175,6 @@ def pick_shrine():
                 pick_shrine()
         elif shrine_pick == "2":
             pick_round_hall()
-    else:
-        if "key" in player.items:
-            print(shrine_return_with_key)
-            print(player.__repr__())
-            shrine_pick = input(shrine_choices_key)
-            if shrine_pick in exit_words:
-                return
-            while shrine_pick != "1":
-                shrine_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
-            if shrine_pick == "1":
-                pick_round_hall()
-        else:
-            print(shrine_return_no_key)
-            print(player.__repr__())
-            shrine_pick = input(shrine_choices)
-            shrine_options = ["1", "2"]
-            if shrine_pick in exit_words:
-                return
-            while shrine_pick not in shrine_options:
-                shrine_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
-            if shrine_pick == "1":
-                if "stone seed" in player.items:
-                    player.remove_item("stone seed")
-                    player.add_item("key")
-                    print(shrine_trade_key)
-                    pick_round_hall()
-                else:
-                    print(shrine_key_stuck)
-                    pick_shrine()
-            elif shrine_pick == "2":
-                pick_round_hall()
 
 def pick_reception_room():
     if reception_room not in player.visited:
@@ -263,10 +233,26 @@ def pick_lower_corridor():
     elif lower_corridor_pick == "5":
         pick_enter_fortress()
         
-def pick_library():
-    if library not in player.visited:
-        player.room_visited(library)
-        print(library.format(player.name))
+def pick_library():    
+    if "scroll" or "ashes" in player.items:
+        if "scroll" in player.items:
+            print(library_return_with_scroll)
+        else: 
+            print(library_return_scroll_used)
+        print(player.__repr__())
+        library_pick = input(library_choices_took_scroll)
+        if library_pick in exit_words:
+            return
+        while library_pick != "1":
+            library_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
+        if library_pick == "1":
+            pick_lower_corridor()
+    else:
+        if library not in player.visited:
+            player.room_visited(library)
+            print(library.format(player.name))
+        else:
+            print(library_return_no_scroll.format(player.name))
         print(player.__repr__())
         library_pick = input(library_choices)
         library_options = ["1", "2"]
@@ -277,43 +263,8 @@ def pick_library():
         if library_pick == "1":
             player.add_item("scroll")
             pick_lower_corridor()
-        elif library_pick == "2":
+        elif library_pick == "2":                         
             pick_lower_corridor()
-    else:
-        if "scroll" in player.items:
-            print(library_return_with_scroll)
-            print(player.__repr__())
-            library_pick = input(library_choices_took_scroll)
-            if library_pick in exit_words:
-                return
-            while library_pick != "1":
-                library_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
-            if library_pick == "1":
-                pick_lower_corridor()
-        elif "ashes" in player.items:
-            print(library_return_scroll_used)
-            print(player.__repr__())
-            library_pick = input(library_choices_took_scroll) 
-            if library_pick in exit_words:
-                return               
-            while library_pick != "1":
-                library_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
-            if library_pick == "1":
-                pick_lower_corridor()
-        else:
-            print(library_return_no_scroll.format(player.name))
-            print(player.__repr__())
-            library_pick = input(library_choices)
-            library_options = ["1", "2"]
-            if library_pick in exit_words:
-                return
-            while library_pick not in library_options:
-                library_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
-            if library_pick == "1":
-                player.add_item("scroll")
-                pick_lower_corridor()
-            elif library_pick == "2":                         
-                pick_lower_corridor()
 
 def pick_lower_hall():
     if lower_hall not in player.visited:
@@ -341,9 +292,25 @@ def pick_lower_hall():
         pick_lower_corridor()
 
 def pick_barracks(): 
-    if barracks not in player.visited:
-        player.room_visited(barracks)
-        print(barracks)
+    if "stone seed" or "key" in player.items:
+        if "stone seed" in player.items:
+            print(barracks_return_with_seed)
+        else:
+            print(barracks_return_with_key)
+        print(player.__repr__())
+        barracks_pick = input(barracks_choices_seed_taken)
+        if barracks_pick in exit_words:
+            return
+        while barracks_pick != "1":
+            barracks_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
+        if barracks_pick == "1":
+            pick_lower_hall()
+    else:
+        if barracks not in player.visited:
+            player.room_visited(barracks)
+            print(barracks)
+        else:
+            print(barracks_return_no_seed_or_key)
         print(player.__repr__())
         barracks_pick = input(barracks_choices)
         barracks_options = ["1", "2"]
@@ -356,41 +323,6 @@ def pick_barracks():
             pick_lower_hall()
         elif barracks_pick == "2":
             pick_lower_hall()
-    else:
-        if "stone seed" in player.items:
-            print(barracks_return_with_seed)
-            print(player.__repr__())
-            barracks_pick = input(barracks_choices_seed_taken)
-            if barracks_pick in exit_words:
-                return
-            while barracks_pick != "1":
-                barracks_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
-            if barracks_pick == "1":
-                pick_lower_hall()
-        elif "key" in player.items:
-            print(barracks_return_with_key)
-            print(player.__repr__())
-            barracks_pick = input(barracks_choices_seed_taken)
-            if barracks_pick in exit_words:
-                return
-            while barracks_pick != "1":
-                barracks_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ")
-            if barracks_pick == "1":
-                pick_lower_hall()
-        else:
-            print(barracks_return_no_seed_or_key)
-            print(player.__repr__())
-            barracks_pick = input(barracks_choices)
-            barracks_options = ["1", "2"]
-            if barracks_pick in exit_words:
-                return
-            while barracks_pick not in barracks_options:
-                barracks_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ")
-            if barracks_pick == "1":
-                player.add_item("stone seed")
-                pick_lower_hall()
-            elif barracks_pick == "2":
-                pick_lower_hall()
 
 def pick_mess_hall(): 
     if mess_hall not in player.visited:
