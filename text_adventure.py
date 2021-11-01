@@ -7,7 +7,7 @@ class Adventurer:
         self.visited = []
 
     def __repr__(self):
-        return "The adventurer {0} currently has: {1} in their inventory.".format(self.name, (self.items))
+        return "The adventurer {0} currently has: {1} in their inventory.".format(self.name, self.items)
 
     def add_item(self, item):
         self.items.append(item)
