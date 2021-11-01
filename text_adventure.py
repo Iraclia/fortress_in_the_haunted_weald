@@ -1,4 +1,4 @@
-from text_adventure_blocks import *
+from text_adventure_blocks import *  # functional code separated from text blocks for ease of organizing
 
 class Adventurer:
     def __init__(self, name):
@@ -6,36 +6,45 @@ class Adventurer:
         self.items = []
         self.visited = []
 
+    # description used at the end of each text block to remind user of inventory items available
     def __repr__(self):
         return "The adventurer {0} currently has: {1} in their inventory.".format(self.name, self.items)
 
+    # inventory list for items collected - items added and removed
     def add_item(self, item):
         self.items.append(item)
 
     def remove_item(self, item):
         self.items.remove(item)
 
+    # list of rooms visited updates text upon returning for a shorter version
     def room_visited(self, room):
         self.visited.append(room)
 
 def welcome():
+    # establishes variations of yes that will be accepted
     positives = ["y", "Y", "yes", "Yes", "yeah", "Yeah", "sure", "Sure", "ok", "Ok", "yep", "Yep"]
 
     print("Welcome to the Fortress in the Haunted Weald. Somewhere in this creepy old building is a priceless treasure - best of luck finding it, don't die on the way! \n")
 
+    # prompt user input to display rules or not
     rule_check = input("Would you like to read the rules? (Y/N) \n")
     if rule_check in positives:
         print ("\nThis is a text adventure game. As the scenes are described, you will be prompted to make choices, find items, and traverse through the rooms in search of a treasure. Type the number of your response when promted and hit enter to continue to the next step. If you would like to exit the game, type 'Exit' at any point. Have fun! \n\n*** Disclaimer: Lots of reading involved. :) ***")
 
+    # collect user name for use in future text blocks
     user_name = input("\nWhat is your name, adventurer? ")
+    # instantiate user as an Adventurer
     user_info = Adventurer(user_name)
     return user_info
 
 #introduces game, establishes player variable 
 player = welcome()
 
+# establishing words to exit the game at any point
 exit_words = ['Exit', 'exit', 'stop', 'Stop', 'leave', 'Leave']
 
+# begins the game, calls upon all the following functions in turn based on layout of the rooms - all the following functions have the same basic structure: check if the current room has been visited before, print out the needed text, print the user information, and then prompt choices to make the next action (to move rooms/handle objects)
 def begin_adventuring(player):
     if intro not in player.visited:
         player.room_visited(intro)
@@ -554,7 +563,7 @@ def replay():
         player.visited = []
         begin_adventuring(player)        
 
-
+# starts the actual gameplay
 begin_adventuring(player)
 
 
