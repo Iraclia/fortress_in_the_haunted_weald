@@ -37,6 +37,9 @@ def rule_checker():
         print("\nSorry, that is not a valid response. Please choose Y or N to continue.")
         return rule_checker()
 
+# establishing words to exit the game at any point
+exit_words = ['Exit', 'exit', 'stop', 'Stop', 'leave', 'Leave']
+
 def welcome():
     print("Welcome to the Fortress in the Haunted Weald. Somewhere in this creepy old building is a priceless treasure - best of luck finding it, don't die on the way! \n")
 
@@ -45,14 +48,14 @@ def welcome():
     # collect user name for use in future text blocks
     user_name = input("What is your name, adventurer? ")
     # instantiate user as an Adventurer
-    user_info = Adventurer(user_name)
-    return user_info
+    if user_name.lower().strip() not in exit_words:
+        user_info = Adventurer(user_name)
+        return user_info
+    else:
+        return
 
 #introduces game, establishes player variable 
 player = welcome()
-
-# establishing words to exit the game at any point
-exit_words = ['Exit', 'exit', 'stop', 'Stop', 'leave', 'Leave']
 
 # begins the game, calls upon all the following functions in turn based on layout of the rooms - all the following functions have the same basic structure: check if the current room has been visited before, print out the needed text, print the user information, and then prompt choices to make the next action (to move rooms/handle objects)
 def begin_adventuring(player):
@@ -506,7 +509,8 @@ def replay():
         begin_adventuring(player)        
 
 # starts the actual gameplay
-begin_adventuring(player)
+if player:
+    begin_adventuring(player)
 
 
 
