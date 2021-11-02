@@ -21,19 +21,29 @@ class Adventurer:
     def room_visited(self, room):
         self.visited.append(room)
 
-def welcome():
-    # establishes variations of yes that will be accepted
-    positives = ["y", "Y", "yes", "Yes", "yeah", "Yeah", "sure", "Sure", "ok", "Ok", "yep", "Yep"]
-
-    print("Welcome to the Fortress in the Haunted Weald. Somewhere in this creepy old building is a priceless treasure - best of luck finding it, don't die on the way! \n")
+def rule_checker():
+    # establishes variations of yes/no that will be accepted
+    positives = ["y", "yes", "yeah", "sure", "ok", "yep", "yah"]
+    negatives = ["n", "no", "nah", "nope", "nu"]
 
     # prompt user input to display rules or not
     rule_check = input("Would you like to read the rules? (Y/N) \n")
+    rule_check = rule_check.lower().strip()
     if rule_check in positives:
-        print ("\nThis is a text adventure game. As the scenes are described, you will be prompted to make choices, find items, and traverse through the rooms in search of a treasure. Type the number of your response when promted and hit enter to continue to the next step. If you would like to exit the game, type 'Exit' at any point. Have fun! \n\n*** Disclaimer: Lots of reading involved. :) ***")
+        return print("\nThis is a text adventure game. As the scenes are described, you will be prompted to make choices, find items, and traverse through the rooms in search of a treasure. Type the number of your response when promted and hit enter to continue to the next step. If you would like to exit the game, type 'Exit' at any point. Have fun! \n\n*** Disclaimer: Lots of reading involved. :) ***\n")
+    elif rule_check in negatives:
+        return print(" ")
+    else:
+        print("\nSorry, that is not a valid response. Please choose Y or N to continue.")
+        return rule_checker()
+
+def welcome():
+    print("Welcome to the Fortress in the Haunted Weald. Somewhere in this creepy old building is a priceless treasure - best of luck finding it, don't die on the way! \n")
+
+    rule_checker()        
 
     # collect user name for use in future text blocks
-    user_name = input("\nWhat is your name, adventurer? ")
+    user_name = input("What is your name, adventurer? ")
     # instantiate user as an Adventurer
     user_info = Adventurer(user_name)
     return user_info
