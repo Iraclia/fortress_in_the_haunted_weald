@@ -246,7 +246,7 @@ def pick_lower_corridor():
         pick_enter_fortress()
         
 def pick_library():    
-    if "scroll" or "ashes" in player.items:
+    if ("scroll" or "ashes") in player.items:
         if "scroll" in player.items:
             print(library_return_with_scroll)
         else: 
@@ -274,9 +274,24 @@ def pick_library():
             library_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
         if library_pick == "1":
             player.add_item("scroll")
-            pick_lower_corridor()
-        elif library_pick == "2":                         
-            pick_lower_corridor()
+            library_pick_2 = input(library_choices_take_scroll).strip()
+            while library_pick_2 != "1":
+                library_pick_2 = input("Sorry, that is not a valid choice. Please select 1 to continue. ").strip()
+            if library_pick_2 == "1":
+                pick_lower_corridor()
+        elif library_pick == "2":  
+            library_pick_3 = input(library_choices_leave_scroll).strip()
+            library_choice_3_options = ["1", "2"]
+            while library_pick_3 not in library_choice_3_options:
+                library_pick_3 = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+            if library_pick_3 == "1":
+                pick_lower_corridor()
+            else: 
+                library_pick_4 = input(library_choices_take_scroll).strip()
+                while library_pick_4 != "1":
+                    library_pick_4 = input("Sorry, that is not a valid choice. Please select 1 to continue. ").strip()
+                if library_pick_4 == "1":
+                    pick_lower_corridor() 
 
 def pick_lower_hall():
     if lower_hall not in player.visited:
