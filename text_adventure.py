@@ -365,10 +365,13 @@ def pick_mess_hall():
     while mess_hall_pick not in mess_hall_options:
         mess_hall_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
     if mess_hall_pick == "1":
-        print(kitchen.format(player.name))
+        print(kitchen_no_candle.format(player.name))
         replay()
     elif mess_hall_pick == "2":
         pick_lower_hall()
+
+def pick_kitchen():
+    pass
 
 def pick_trapdoor_room():
     if trapdoor_room not in player.visited:
@@ -486,31 +489,52 @@ def pick_treasure_room():
         pick_base_of_ladder()
 
 def pick_study_room(): 
-    if study_room not in player.visited:
-        player.room_visited(study_room)
-        print(study_room)
-    else:
-        print(study_room_return)
-    print(player.__repr__())
-    study_room_pick = input(study_room_choices).strip()
-    study_room_options = ["1", "2"]
-    if study_room_pick.lower() in exit_words:
-        return
-    while study_room_pick not in study_room_options:
-        study_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
-    if study_room_pick == "1":
-        pick_lower_corridor()
-    elif study_room_pick == "2":
-        print(study_room_candle)
-        print(study_room_post_candle)
+    if "candle" in player.items:
+        print(study_room_return_candle)
         print(player.__repr__())
-        study_room_pick = input(study_room_choices_post_candle).strip()
+        study_room_pick = input(study_room_choices_took_candle).strip()
         if study_room_pick.lower() in exit_words:
             return
         while study_room_pick != "1":
             study_room_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ").strip()
         if study_room_pick == "1":
             pick_lower_corridor()
+    else:
+        if study_room not in player.visited:
+            player.room_visited(study_room)
+            print(study_room)
+        else:
+            print(study_room_return_no_candle)
+        print(player.__repr__())
+        study_room_pick = input(study_room_choices).strip()
+        study_room_options = ["1", "2"]
+        if study_room_pick.lower() in exit_words:
+            return
+        while study_room_pick not in study_room_options:
+            study_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+        if study_room_pick == "1":
+            pick_lower_corridor()
+        elif study_room_pick == "2":
+            print(study_room_candle)
+            player.add_item("candle")
+            print(player.__repr__())
+            study_room_pick = input(study_room_choices_post_candle).strip()
+            study_room_options_post_candle = ["1", "2"] 
+            if study_room_pick.lower() in exit_words:
+                return
+            while study_room_pick not in study_room_options_post_candle:
+                study_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+            if study_room_pick == "1":
+                print(check_study_room)
+                study_room_pick = input(study_room_choices_post_check).strip()
+                if study_room_pick.lower() in exit_words:
+                    return
+                while study_room_pick != "1":
+                    study_room_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ").strip()
+                if study_room_pick == "1":
+                    pick_lower_corridor()
+            elif study_room_pick == "2":
+                pick_lower_corridor()    
 
 def replay():
     restart = input("\nWould you like to play again? (Y/N) ").lower().strip()
