@@ -355,8 +355,10 @@ def pick_mess_hall():
     if mess_hall not in player.visited:
         player.room_visited(mess_hall)
         print(mess_hall)
-    else:
+    elif kitchen not in player.visited:
         print(mess_hall_return)
+    else:
+        print(mess_hall_return_post_kitchen)
     print(player.__repr__())
     mess_hall_pick = input(mess_hall_choices).strip()
     mess_hall_options = ["1", "2"]
@@ -365,13 +367,47 @@ def pick_mess_hall():
     while mess_hall_pick not in mess_hall_options:
         mess_hall_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
     if mess_hall_pick == "1":
-        print(kitchen_no_candle.format(player.name))
-        replay()
+        pick_kitchen()
     elif mess_hall_pick == "2":
         pick_lower_hall()
 
 def pick_kitchen():
-    pass
+    if ("candle" not in player.items) and (kitchen not in player.visited):
+            print(kitchen_no_candle.format(player.name))
+            replay()
+    elif ("candle" in player.items) and (kitchen not in player.visited):
+        player.room_visited(kitchen)
+        print(kitchen)
+        player.remove_item("candle")
+    else:
+        print(kitchen_return) 
+    print(player.__repr__())
+    kitchen_pick = input(kitchen_choices).strip()
+    kitchen_options = ["1", "2", "3"]
+    if kitchen_pick.lower() in exit_words:
+        return
+    while kitchen_pick not in kitchen_options:
+        kitchen_pick = input("Sorry, that is not a valid choice. Please select 1, 2 or 3 to continue. ").strip()
+    if kitchen_pick == "1":
+        print(pantry_sudden_death.format(player.name))
+        replay()
+    elif kitchen_pick == "2":
+        print(kitchen_boxes)
+        kitchen_boxes_pick = input(kitchen_boxes_choices).strip()
+        kitchen_boxes_options = ["1", "2"]
+        if kitchen_boxes_pick.lower() in exit_words:
+            return
+        while kitchen_boxes_pick not in kitchen_boxes_options:
+            kitchen_boxes_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+        if kitchen_boxes_pick == "1":
+            print(kitchen_figurine)
+        elif kitchen_boxes_pick == "2":
+            pick_kitchen()
+    else:
+        pick_mess_hall()
+
+  # finish building out the above texts - include options for returning with/without the figurine being taken      
+
 
 def pick_trapdoor_room():
     if trapdoor_room not in player.visited:
