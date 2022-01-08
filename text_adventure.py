@@ -26,7 +26,7 @@ positives = ["y", "yes", "yeah", "sure", "ok", "okay", "yep", "yah"]
 negatives = ["n", "no", "nah", "nope", "nu"]
 
 # establishing words to exit the game at any point
-exit_words = ['exit', 'stop', 'leave']
+exit_words = ['exit', 'stop', 'leave', 'quit']
 
 def rule_checker():
     # prompt user input to display rules or not
@@ -40,7 +40,7 @@ def rule_checker():
         return rule_checker()
 
 def welcome():
-    print("Welcome to the Fortress in the Haunted Weald. Somewhere in this creepy old building is a priceless treasure - best of luck finding it, don't die on the way! \n")
+    print("Welcome to the Fortress in the Haunted Weald. Somewhere in this creepy old building is a priceless treasure - best of luck finding it, try not to die on the way! \n")
 
     rule_checker()        
 
@@ -57,7 +57,28 @@ def welcome():
 player = welcome()
 
 # begins the game, calls upon all the following functions in turn based on layout of the rooms - all the following functions have the same basic structure: check if the current room has been visited before, print out the needed text, print the user information, and then prompt choices to make the next action (to move rooms/handle objects)
+
+# Function to check/add player visit to each room and to print the room description, player inventory and choices for the room
+def basic_for_room(room_name, room_return, room_choices, return_choices):
+    if room_name not in player.visited:
+        player.room_visited(room_name)
+        print(room_name)
+        print(player.__repr__())
+        room_choice = input(room_choices).strip()
+        return room_choice
+    else:
+        print(room_return)
+        print(player.__repr__())
+        room_choice = input(return_choices).strip()
+        return room_choice
+
+# Function to take the player choice for each room and process it
+    
+
+
 def begin_adventuring(player):
+    intro_pick = basic_for_room(intro, intro_return, intro_choices, intro_choices_return)
+    '''
     if intro not in player.visited:
         player.room_visited(intro)
         print(intro)
@@ -67,6 +88,7 @@ def begin_adventuring(player):
         print(intro_return)
         print(player.__repr__())
         intro_pick = input(intro_choices_return).strip()
+    '''
     intro_options = ["1", "2"]
     if intro_pick.lower() in exit_words:
         return
