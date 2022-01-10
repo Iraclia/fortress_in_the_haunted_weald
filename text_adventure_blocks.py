@@ -58,7 +58,9 @@ shrine_choices_key = "\n1. Return to the round hall. As enchanting as the statue
 
 shrine_trade_key = "\nHesitantly, with your attention half on the woman's face in case those pale eyes -do- open, you reach out to take the key. Despite her seemingly loose hold on it, it doesn't move. You stare a moment, eyes falling to the inscription. That stone seed you found in the barracks is remarkably lifelike... and perhaps a symbol of hope? You place it in the statues open hand and nearly jump out of your skin as the fingers of the statue tighten its grip in the seed, even as she loosens her hold on the key. Heart pounding, you hurriedly grab the key before she changes her mind and beat a hasty retreat out of the statue's field of vision and into the round hall again before you take a breath."
 
-shrine_key_stuck = "\nHesitantly, with your attention half on the woman's face in case those pale eyes -do- open, you reach out to take the key. Despite her seemingly loose hold on it, it doesn't move. You stare a moment, eyes falling to the inscription. Maybe she wants something in return? You're not sure what but it feels like she is waiting for you to do something... "
+shrine_key_stuck = "\nHesitantly, with your attention half on the woman's face in case those pale eyes -do- open, you reach out to take the key. Despite her seemingly loose hold on it, it doesn't move. You stare a moment, eyes falling to the inscription. Maybe she wants something in return? You're not sure what but it feels like she is waiting for you to do something... What do you do? \n"
+
+shrine_options_stuck_key = "\n1. You don't imagine a second attempt will dislodge the key. And you're not sure you want to test the good will of the statue twice... head back to the round hall.\n"
 
 
 # RECEPTION ROOM
@@ -100,9 +102,13 @@ library_return_scroll_used = "\nYou push open the metal door, noting how smoothl
 
 library_choices = "\n1. You eye the scroll suspiciously, but decide it must have your name on it for a reason. Right? Take the scroll. \n2. Everything in this fortress has been strange and unusual. Maybe it's not worth picking up the strange bit of paper just for the sake of curiosity... Leave the scroll. \n"
 
-library_choices_take_scroll = "\nWhen you reach for the scroll, the shimmering air around it feels slightly warmer than it should... but nothing more seems to come of it. When you lift the scroll from the shelf the shimmers sparkle once and fade and disappear. The scroll is light and seems delicate, but when you pull on the ribbon it refuses to budge. With a faint frown, you tug a bit harder - still nothing. Huh. A few more experimental yanks shows that she scroll is not to be opened despite the force you put into it. Well, you suppose it's not any odder than the rest of this place... What do you do?\n\n1. Return to the corridor. There doesn't seem to be anything else for you here.\n"
+library_take_scroll = "\nWhen you reach for the scroll, the shimmering air around it feels slightly warmer than it should... but nothing more seems to come of it. When you lift the scroll from the shelf the shimmers sparkle once and fade and disappear. The scroll is light and seems delicate, but when you pull on the ribbon it refuses to budge. With a faint frown, you tug a bit harder - still nothing. Huh. A few more experimental yanks shows that she scroll is not to be opened despite the force you put into it. Well, you suppose it's not any odder than the rest of this place... What do you do?\n"
 
-library_choices_leave_scroll = "\nYou don't think any good can come of a scroll left for you in this place. What if it's a curse? Or booby trapped? Better safe than sorry, after all. What do you do? \n\n1. Nothing more to see here - head back to the corridor. \n2. On the other hand... if does have your name on it. Maybe you'll take the scroll after all. \n"
+library_choices_take_scroll = "\n1. Return to the corridor. There doesn't seem to be anything else for you here.\n"
+
+library_leave_scroll = "\nYou don't think any good can come of a scroll left for you in this place. What if it's a curse? Or booby trapped? Better safe than sorry, after all. What do you do? \n"
+
+library_choices_leave_scroll = "\n1. Nothing more to see here - head back to the corridor. \n2. On the other hand... if does have your name on it. Maybe you'll take the scroll after all. \n"
 
 library_choices_took_scroll = "\n1. It would be nice if this library included a treasure map, and not just mysterious scrolls... Return to the corridor. \n"
 
