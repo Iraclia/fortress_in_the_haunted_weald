@@ -1,6 +1,5 @@
 from text_adventure_blocks import *  # functional code separated from text blocks for ease of organizing
 
-
 class Adventurer:
     def __init__(self, name):
         self.name = name
@@ -27,7 +26,7 @@ positives = ["y", "yes", "yeah", "sure", "ok", "okay", "yep", "yah"]
 negatives = ["n", "no", "nah", "nope", "nu"]
 
 # establishing words to exit the game at any point
-exit_words = ["exit", "stop", "leave", "quit", "terminate"]
+exit_words = ["exit", "stop", "leave", "quit", "terminate", "escape", "close"]
 
 def rule_checker():
     # prompt user input to display rules or not
@@ -239,6 +238,7 @@ def pick_lower_corridor():
         pick_study_room()
     elif lower_corridor_pick == "4":
         pick_room_to_stairs()
+        #this needs another examination, if you return from the lower corridor the text doesn't read right
     elif lower_corridor_pick == "5":
         pick_enter_fortress()
         
@@ -262,9 +262,9 @@ def pick_library():
             library_pick_3 = room_return(library_leave_scroll, library_choices_leave_scroll, library_options_3)
             if library_pick_3 == "1":
                 pick_lower_corridor()
-            else: 
+            elif library_pick_3 == "2": 
                 library_options_4 = ["1"]
-                library_pick_4 = room_return(library_leave_scroll, library_choices_leave_scroll, library_options_4)
+                library_pick_4 = room_return(library_take_scroll, library_choices_took_scroll, library_options_4)
                 if library_pick_4 == "1":
                     pick_lower_corridor() 
 
@@ -281,9 +281,9 @@ def pick_lower_hall():
         pick_lower_corridor()
 
 def pick_barracks(): 
-    if "stone seed" or "key" in player.items:
+    if ("stone seed" or "key") in player.items:
         barracks_options = ["1"]
-        barracks_pick = room_return_item(barracks_return_with_seed, barracks_return_with_key, barracks_choices_seed_taken, barracks_options, 'stone seed')
+        barracks_pick = room_return_item(barracks_return_with_seed, barracks_return_with_key, barracks_choices_seed_taken, barracks_options, "stone seed")
         if barracks_pick == "1":
             pick_lower_hall()
     else:
@@ -351,6 +351,7 @@ def pick_study_room():
             study_room_pick = get_choice(study_room_choices_post_candle, study_room_options_post_candle)
             if study_room_pick == "1":
                 print(check_study_room)
+                print(player.__repr__())
                 study_room_options_post_check = ["1"]
                 study_room_pick = get_choice(study_room_choices_post_check, study_room_options_post_check)
                 if study_room_pick == "1":
