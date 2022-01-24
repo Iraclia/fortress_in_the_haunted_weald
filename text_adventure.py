@@ -26,7 +26,7 @@ positives = ["y", "yes", "yeah", "sure", "ok", "okay", "yep", "yah"]
 negatives = ["n", "no", "nah", "nope", "nu"]
 
 # establishing words to exit the game at any point
-exit_words = ['exit', 'stop', 'leave', 'quit']
+exit_words = ["exit", "stop", "leave", "quit", "terminate", "escape", "close"]
 
 def rule_checker():
     # prompt user input to display rules or not
@@ -48,52 +48,103 @@ def welcome():
     user_name = input("What is your name, adventurer? ").strip()
     # instantiate user as an Adventurer
     if user_name.lower() not in exit_words:
-        user_info = Adventurer(user_name)
-        return user_info
+        player = Adventurer(user_name)
+        return player
     else:
         return
 
-#introduces game, establishes player variable 
-player = welcome()
-
-# begins the game, calls upon all the following functions in turn based on layout of the rooms - all the following functions have the same basic structure: check if the current room has been visited before, print out the needed text, print the user information, and then prompt choices to make the next action (to move rooms/handle objects)
-
-# Function to check/add player visit to each room and to print the room description, player inventory and choices for the room
-def basic_for_room(room_name, room_return, room_choices, return_choices):
+# Function to check/add player visit to a room and to print the room description, player inventory and get player choices for the room 
+def room_basic(room_name, room_return, room_choices, input_options, return_choices=None):
+    if return_choices == None:
+        return_choices = room_choices
     if room_name not in player.visited:
         player.room_visited(room_name)
         print(room_name)
         print(player.__repr__())
-        room_choice = input(room_choices).strip()
+        room_choice = get_choice(room_choices, input_options)
         return room_choice
     else:
         print(room_return)
         print(player.__repr__())
-        room_choice = input(return_choices).strip()
+        room_choice = get_choice(return_choices, input_options)
         return room_choice
 
-# Function to take the player choice for each room and process it
+# Function for conditional entry to a room for the first time to print the room descrition, player inventory and choices for the room
+def room_basic_conditional(room_name, room_choices, input_options):
+    player.room_visited(room_name)
+    print(room_name)
+    print(player.__repr__())
+    room_choice = get_choice(room_choices, input_options)
+    return room_choice
+
+# Function for just the return to a room to print the room description, player inventory and choices for the room
+def room_return(room_name, room_choices, input_options):
+    print(room_name)
+    print(player.__repr__())
+    room_choice = get_choice(room_choices, input_options)
+    return room_choice
+
+# Function to check/add player visit to a room and to print the room description including the player name, player inventory and choices for the room -- Perhaps see if this can be combined with the basic room function? Options for including a name based on a T/F name parameter with a default F?
+def room_with_player_name(room_name, room_return, room_choices, input_options, return_choices=None):
+    if return_choices == None:
+        return_choices = room_choices
+    if room_name not in player.visited:
+        player.room_visited(room_name)
+        print(room_name.format(player.name))
+        print(player.__repr__())
+        room_choice = get_choice(room_choices, input_options)
+        return room_choice
+    else:
+        print(room_return.format(player.name))
+        print(player.__repr__())
+        room_choice = get_choice(room_choices, input_options)
+        return room_choice
+
+# Function for just the return to a room with a contingent item to print the room description, player inventory and choices for the room
+def room_return_item(room_name_item, room_name_no_item, room_choices, input_options, item_name):
+    if item_name in player.items:
+        print(room_name_item)
+    else: 
+        print(room_name_no_item)
+    print(player.__repr__())
+    room_choice = get_choice(room_choices, input_options)
+    return room_choice
+
+# Function for just the return to a room dependent on visiting another room to print the room description, player inventory and choices for the room
+def room_return_conditional(room_name, contingent_room, room_return, contingent_return, room_choices, input_options):
+    if room_name not in player.visited:
+        player.room_visited(room_name)
+        print(room_name)
+    else:
+        if contingent_room not in player.visited:
+            print(room_return)
+        else:
+            print(contingent_return)
+    print(player.__repr__())
+    room_choice = get_choice(room_choices, input_options)
+    return room_choice
+
+# Function to gather user choices from the room options, check for exit words and make sure choice is valid
+def get_choice(room_choices, input_options):
+    room_choice = input(room_choices).strip()
+    if room_choice.lower() in exit_words:
+        print("Sorry to see you go! Thank you for playing!")
+        return
+    elif room_choice not in input_options:
+        print("Sorry, that is not a valid choice. Please select a valid option number to continue. ")
+        get_choice(room_choices, input_options)
+    else:
+        return room_choice
     
 
+# Introduces game, establishes player variable 
+player = welcome()
+
+# Begins the game, calls upon all the following functions in turn based on layout of the rooms - all the following functions have the same basic structure: check if the current room has been visited before, print out the needed text, print the user information, and then prompt choices to make the next action (to move rooms/handle objects)
 
 def begin_adventuring(player):
-    intro_pick = basic_for_room(intro, intro_return, intro_choices, intro_choices_return)
-    '''
-    if intro not in player.visited:
-        player.room_visited(intro)
-        print(intro)
-        print(player.__repr__())
-        intro_pick = input(intro_choices).strip()
-    else:
-        print(intro_return)
-        print(player.__repr__())
-        intro_pick = input(intro_choices_return).strip()
-    '''
     intro_options = ["1", "2"]
-    if intro_pick.lower() in exit_words:
-        return
-    while intro_pick not in intro_options:
-        intro_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+    intro_pick = room_basic(intro, intro_return, intro_choices, intro_options, intro_choices_return)
     if intro_pick == "1":
         print(run_away.format(player.name))
         replay()
@@ -101,18 +152,8 @@ def begin_adventuring(player):
         pick_enter_fortress()
 
 def pick_enter_fortress():
-    if enter_fortress not in player.visited:
-        player.room_visited(enter_fortress)
-        print(enter_fortress)
-    else:
-        print(enter_fortress_return)
-    print(player.__repr__())
-    enter_fortress_pick = input(enter_fortress_choices).strip()
     enter_fortress_options = ["1", "2", "3", "4"]
-    if enter_fortress_pick.lower() in exit_words:
-        return
-    while enter_fortress_pick not in enter_fortress_options:
-        enter_fortress_pick = input("Sorry, that is not a valid choice. Please select 1, 2, 3 or 4 to continue. ").strip()
+    enter_fortress_pick = room_basic(enter_fortress, enter_fortress_return, enter_fortress_choices, enter_fortress_options)
     if enter_fortress_pick == "1":
         pick_guard_room()
     elif enter_fortress_pick == "2":
@@ -124,28 +165,13 @@ def pick_enter_fortress():
     
 def pick_guard_room():
     if "crowbar" in player.items:
-        print(guard_room_return_with_crowbar)
-        print(player.__repr__())
-        guard_room_pick = input(guard_room_choices_crowbar).strip()
-        if guard_room_pick.lower() in exit_words:
-            return
-        while guard_room_pick != "1":
-            guard_room_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ").strip()
+        guard_room_options = ["1"]
+        guard_room_pick = room_return(guard_room_return_with_crowbar, guard_room_choices_crowbar, guard_room_options)
         if guard_room_pick == "1":
             pick_enter_fortress()
     else:
-        if guard_room not in player.visited:
-            player.room_visited(guard_room)
-            print(guard_room)
-        else:
-            print(guard_room_return_no_crowbar)
-        print(player.__repr__())
-        guard_room_pick = input(guard_room_choices).strip()
         guard_room_options = ["1", "2"]
-        if guard_room_pick.lower() in exit_words:
-            return
-        while guard_room_pick not in guard_room_options:
-            guard_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+        guard_room_pick = room_basic(guard_room, guard_room_return_no_crowbar, guard_room_choices, guard_room_options)
         if guard_room_pick == "1":
             player.add_item("crowbar")
             pick_enter_fortress()
@@ -153,18 +179,8 @@ def pick_guard_room():
             pick_enter_fortress()
     
 def pick_round_hall():
-    if round_hall not in player.visited:
-        player.room_visited(round_hall)
-        print(round_hall)
-    else:
-        print(round_hall_return)
-    print(player.__repr__())
-    round_hall_pick = input(round_hall_choices).strip()
-    if round_hall_pick.lower() in exit_words:
-        return
     round_hall_options = ["1", "2", "3", "4"]
-    while round_hall_pick not in round_hall_options:
-        round_hall_pick = input("Sorry, that is not a valid choice. Please select 1, 2, 3 or 4 to continue. ").strip()
+    round_hall_pick = room_basic(round_hall, round_hall_return, round_hall_choices, round_hall_options)
     if round_hall_pick == "1":
         pick_shrine()
     elif round_hall_pick == "2":
@@ -176,28 +192,13 @@ def pick_round_hall():
 
 def pick_shrine():
     if "key" in player.items:
-        print(shrine_return_with_key)
-        print(player.__repr__())
-        shrine_pick = input(shrine_choices_key).strip()
-        if shrine_pick.lower() in exit_words:
-            return
-        while shrine_pick != "1":
-            shrine_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ").strip()
+        shrine_options = ["1"]
+        shrine_pick = room_return(shrine_return_with_key, shrine_choices_key, shrine_options)
         if shrine_pick == "1":
             pick_round_hall()
     else:
-        if shrine not in player.visited:
-            player.room_visited(shrine)
-            print(shrine)
-        else:
-            print(shrine_return_no_key)
-        print(player.__repr__())
-        shrine_pick = input(shrine_choices).strip()
         shrine_options = ["1", "2"]
-        if shrine_pick.lower() in exit_words:
-            return
-        while shrine_pick not in shrine_options:
-            shrine_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+        shrine_pick = room_basic(shrine, shrine_return_no_key, shrine_choices, shrine_options)
         if shrine_pick == "1":
             if "stone seed" in player.items:
                 player.remove_item("stone seed")
@@ -205,57 +206,30 @@ def pick_shrine():
                 print(shrine_trade_key)
                 pick_round_hall()
             else:
-                print(shrine_key_stuck)
-                pick_shrine()
+                shrine_options = ["1"]
+                shrine_pick = room_return(shrine_key_stuck, shrine_options_stuck_key, shrine_options)
+                if shrine_pick == "1":
+                    pick_round_hall()
         elif shrine_pick == "2":
             pick_round_hall()
 
 def pick_reception_room():
-    if reception_room not in player.visited:
-        player.room_visited(reception_room)
-        print(reception_room)
-    else:
-        print(reception_room_return)
-    print(player.__repr__())
-    reception_room_pick = input(reception_room_choices).strip()
-    if reception_room_pick.lower() in exit_words:
-        return
-    if reception_room_pick != "1":
-        reception_room_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ").strip()
-    elif reception_room_pick == "1":
+    reception_room_options = ["1"]
+    reception_room_pick = room_basic(reception_room, reception_room_return, reception_room_choices, reception_room_options)
+    if reception_room_pick == "1":
         pick_round_hall()
 
 def pick_room_to_stairs():
-    if room_to_stairs not in player.visited:
-        player.room_visited(room_to_stairs)
-        print(room_to_stairs)
-    else:
-        print(room_to_stairs_return)
-    print(player.__repr__())
-    room_to_stairs_pick = input(room_to_stairs_choices).strip()
     room_to_stairs_options = ["1", "2"]
-    if room_to_stairs_pick.lower() in exit_words:
-        return
-    while room_to_stairs_pick not in room_to_stairs_options:
-        room_to_stairs_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+    room_to_stairs_pick = room_basic(room_to_stairs, room_to_stairs_return, room_to_stairs_choices, room_to_stairs_options)
     if room_to_stairs_pick == "1":
         pick_lower_corridor()
     elif room_to_stairs_pick == "2":
         pick_round_hall()
 
 def pick_lower_corridor():
-    if lower_corridor not in player.visited:
-        player.room_visited(lower_corridor)
-        print(lower_corridor)
-    else:
-        print(lower_corridor_return)
-    print(player.__repr__())
-    lower_corridor_pick = input(lower_corridor_choices).strip()
     lower_corridor_options = ["1", "2", "3", "4", "5"]
-    if lower_corridor_pick.lower() in exit_words:
-        return
-    while lower_corridor_pick not in lower_corridor_options:
-        lower_corridor_pick = input("Sorry, that is not a valid choice. Please select 1, 2, 3, 4 or 5 to continue. ").strip()
+    lower_corridor_pick = room_basic(lower_corridor, lower_corridor_return, lower_corridor_choices, lower_corridor_options)
     if lower_corridor_pick == "1":
         pick_library()
     elif lower_corridor_pick == "2":
@@ -264,73 +238,39 @@ def pick_lower_corridor():
         pick_study_room()
     elif lower_corridor_pick == "4":
         pick_room_to_stairs()
+        #this needs another examination, if you return from the lower corridor the text doesn't read right
     elif lower_corridor_pick == "5":
         pick_enter_fortress()
         
 def pick_library():    
     if ("scroll" or "ashes") in player.items:
-        if "scroll" in player.items:
-            print(library_return_with_scroll)
-        else: 
-            print(library_return_scroll_used)
-        print(player.__repr__())
-        library_pick = input(library_choices_took_scroll).strip()
-        if library_pick.lower() in exit_words:
-            return
-        while library_pick != "1":
-            library_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ").strip()
+        library_options = ["1"]
+        library_pick = room_return_item(library_return_with_scroll, library_return_scroll_used, library_choices_took_scroll, library_options, 'scroll')
         if library_pick == "1":
             pick_lower_corridor()
     else:
-        if library not in player.visited:
-            player.room_visited(library)
-            print(library.format(player.name))
-        else:
-            print(library_return_no_scroll.format(player.name))
-        print(player.__repr__())
-        library_pick = input(library_choices).strip()
         library_options = ["1", "2"]
-        if library_pick.lower() in exit_words:
-            return
-        while library_pick not in library_options:
-            library_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+        library_pick = room_with_player_name(library, library_return_no_scroll, library_choices, library_options)
         if library_pick == "1":
             player.add_item("scroll")
-            library_pick_2 = input(library_choices_take_scroll).strip()
-            while library_pick_2 != "1":
-                library_pick_2 = input("Sorry, that is not a valid choice. Please select 1 to continue. ").strip()
+            library_options_2 = ["1"]
+            library_pick_2 = room_return(library_take_scroll, library_choices_take_scroll, library_options_2)
             if library_pick_2 == "1":
                 pick_lower_corridor()
         elif library_pick == "2":  
-            library_pick_3 = input(library_choices_leave_scroll).strip()
-            library_choice_3_options = ["1", "2"]
-            while library_pick_3 not in library_choice_3_options:
-                library_pick_3 = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+            library_options_3 = ["1", "2"]
+            library_pick_3 = room_return(library_leave_scroll, library_choices_leave_scroll, library_options_3)
             if library_pick_3 == "1":
                 pick_lower_corridor()
-            else: 
-                library_pick_4 = input(library_choices_take_scroll).strip()
-                while library_pick_4 != "1":
-                    library_pick_4 = input("Sorry, that is not a valid choice. Please select 1 to continue. ").strip()
+            elif library_pick_3 == "2": 
+                library_options_4 = ["1"]
+                library_pick_4 = room_return(library_take_scroll, library_choices_took_scroll, library_options_4)
                 if library_pick_4 == "1":
                     pick_lower_corridor() 
 
 def pick_lower_hall():
-    if lower_hall not in player.visited:
-        player.room_visited(lower_hall)
-        print(lower_hall)
-    else:
-        if trapdoor_room not in player.visited:
-            print(lower_hall_return)
-        else:
-            print(lower_hall_return_open_door)
-    print(player.__repr__())
-    lower_hall_pick = input(lower_hall_choices).strip()
-    if lower_hall_pick.lower() in exit_words:
-        return
     lower_hall_options = ["1", "2", "3", "4"]
-    while lower_hall_pick not in lower_hall_options:
-        lower_hall_pick = input("Sorry, that is not a valid choice. Please select 1, 2, 3 or 4 to continue. ").strip()
+    lower_hall_pick = room_return_conditional(lower_hall, trapdoor_room, lower_hall_return, lower_hall_return_open_door, lower_hall_choices, lower_hall_options)
     if lower_hall_pick == "1":
         pick_barracks()
     elif lower_hall_pick == "2":
@@ -341,32 +281,14 @@ def pick_lower_hall():
         pick_lower_corridor()
 
 def pick_barracks(): 
-    if "stone seed" or "key" in player.items:
-        if "stone seed" in player.items:
-            print(barracks_return_with_seed)
-        else:
-            print(barracks_return_with_key)
-        print(player.__repr__())
-        barracks_pick = input(barracks_choices_seed_taken).strip()
-        if barracks_pick.lower() in exit_words:
-            return
-        while barracks_pick != "1":
-            barracks_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ").strip()
+    if ("stone seed" or "key") in player.items:
+        barracks_options = ["1"]
+        barracks_pick = room_return_item(barracks_return_with_seed, barracks_return_with_key, barracks_choices_seed_taken, barracks_options, "stone seed")
         if barracks_pick == "1":
             pick_lower_hall()
     else:
-        if barracks not in player.visited:
-            player.room_visited(barracks)
-            print(barracks)
-        else:
-            print(barracks_return_no_seed_or_key)
-        print(player.__repr__())
-        barracks_pick = input(barracks_choices).strip()
         barracks_options = ["1", "2"]
-        if barracks_pick.lower() in exit_words:
-            return
-        while barracks_pick not in barracks_options:
-            barracks_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+        barracks_pick = room_basic(barracks, barracks_return_no_seed_or_key, barracks_choices, barracks_options)
         if barracks_pick == "1":
             player.add_item("stone seed")
             pick_lower_hall()
@@ -374,20 +296,8 @@ def pick_barracks():
             pick_lower_hall()
 
 def pick_mess_hall(): 
-    if mess_hall not in player.visited:
-        player.room_visited(mess_hall)
-        print(mess_hall)
-    elif kitchen not in player.visited:
-        print(mess_hall_return)
-    else:
-        print(mess_hall_return_post_kitchen)
-    print(player.__repr__())
-    mess_hall_pick = input(mess_hall_choices).strip()
     mess_hall_options = ["1", "2"]
-    if mess_hall_pick.lower() in exit_words:
-        return
-    while mess_hall_pick not in mess_hall_options:
-        mess_hall_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+    mess_hall_pick = room_return_conditional(mess_hall, kitchen, mess_hall_return, mess_hall_return_post_kitchen, mess_hall_choices, mess_hall_options)
     if mess_hall_pick == "1":
         pick_kitchen()
     elif mess_hall_pick == "2":
@@ -404,23 +314,15 @@ def pick_kitchen():
     else:
         print(kitchen_return) 
     print(player.__repr__())
-    kitchen_pick = input(kitchen_choices).strip()
     kitchen_options = ["1", "2", "3"]
-    if kitchen_pick.lower() in exit_words:
-        return
-    while kitchen_pick not in kitchen_options:
-        kitchen_pick = input("Sorry, that is not a valid choice. Please select 1, 2 or 3 to continue. ").strip()
+    kitchen_pick = get_choice(kitchen_choices, kitchen_options)
     if kitchen_pick == "1":
         print(pantry_sudden_death.format(player.name))
         replay()
     elif kitchen_pick == "2":
         print(kitchen_boxes)
-        kitchen_boxes_pick = input(kitchen_boxes_choices).strip()
         kitchen_boxes_options = ["1", "2"]
-        if kitchen_boxes_pick.lower() in exit_words:
-            return
-        while kitchen_boxes_pick not in kitchen_boxes_options:
-            kitchen_boxes_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+        kitchen_boxes_pick = get_choice(kitchen_boxes_choices, kitchen_boxes_options)
         if kitchen_boxes_pick == "1":
             print(kitchen_figurine)
         elif kitchen_boxes_pick == "2":
@@ -430,18 +332,37 @@ def pick_kitchen():
 
   # finish building out the above texts - include options for returning with/without the figurine being taken      
 
+def pick_study_room(): 
+    if "candle" in player.items:
+        study_room_options = ["1"]
+        study_room_pick = room_return(study_room_return_candle, study_room_choices_took_candle, study_room_options)
+        if study_room_pick == "1":
+            pick_lower_corridor()
+    else:
+        study_room_options = ["1", "2"]
+        study_room_pick = room_basic(study_room, study_room_return_no_candle, study_room_choices, study_room_options)
+        if study_room_pick == "1":
+            pick_lower_corridor()
+        elif study_room_pick == "2":
+            print(study_room_candle)
+            player.add_item("candle")
+            print(player.__repr__())
+            study_room_options_post_candle = ["1", "2"] 
+            study_room_pick = get_choice(study_room_choices_post_candle, study_room_options_post_candle)
+            if study_room_pick == "1":
+                print(check_study_room)
+                print(player.__repr__())
+                study_room_options_post_check = ["1"]
+                study_room_pick = get_choice(study_room_choices_post_check, study_room_options_post_check)
+                if study_room_pick == "1":
+                    pick_lower_corridor()
+            elif study_room_pick == "2":
+                pick_lower_corridor()    
 
 def pick_trapdoor_room():
     if trapdoor_room not in player.visited:
-        player.room_visited(trapdoor_room)
-        print(trapdoor_room)
-        print(player.__repr__())
-        trapdoor_room_pick = input(trapdoor_room_choices).strip()
         trapdoor_room_options = ["1", "2"]
-        if trapdoor_room_pick.lower() in exit_words:
-            return
-        while trapdoor_room_pick not in trapdoor_room_options:
-            trapdoor_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+        trapdoor_room_pick = room_basic_conditional(trapdoor_room, trapdoor_room_choices, trapdoor_room_options)
         if trapdoor_room_pick == "1":
             if "crowbar" in player.items:
                 print(opening_trapdoor)
@@ -455,27 +376,15 @@ def pick_trapdoor_room():
             pick_lower_hall()
     else:
         if "broken crowbar" in player.items:
-            print(trapdoor_room_return_opened)
-            print(player.__repr__())
-            trapdoor_room_pick = input(trapdoor_room_choices_open).strip()
             trapdoor_room_options = ["1", "2"]
-            if trapdoor_room_pick.lower() in exit_words:
-                return
-            while trapdoor_room_pick not in trapdoor_room_options:
-                trapdoor_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+            trapdoor_room_pick = room_return(trapdoor_room_return_opened, trapdoor_room_choices_open, trapdoor_room_options)
             if trapdoor_room_pick == "1":
                 pick_base_of_ladder()
             elif trapdoor_room_pick == "2":
                 pick_lower_hall()
         else:
-            print(trapdoor_room_return_closed)
-            print(player.__repr__())
-            trapdoor_room_pick = input(trapdoor_room_choices).strip()
             trapdoor_room_options = ["1", "2"]
-            if trapdoor_room_pick.lower() in exit_words:
-                return
-            while trapdoor_room_pick not in trapdoor_room_options:
-                trapdoor_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+            trapdoor_room_pick = room_return(trapdoor_room_return_closed, trapdoor_room_choices, trapdoor_room_options)
             if trapdoor_room_pick == "1":
                 if "crowbar" in player.items:
                     print(opening_trapdoor)
@@ -495,15 +404,11 @@ def pick_base_of_ladder():
     else:
         print(base_of_ladder_return)
     print(player.__repr__())
-    if sudden_death_scroll in player.visited:
-        base_of_ladder_pick = input(base_of_ladder_choices_survivor).strip()
-    else:
-        base_of_ladder_pick = input(base_of_ladder_choices).strip()
     base_of_ladder_options = ["1", "2", "3"]
-    if base_of_ladder_pick.lower() in exit_words:
-        return
-    while base_of_ladder_pick not in base_of_ladder_options:
-        base_of_ladder_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+    if sudden_death_scroll in player.visited:
+        base_of_ladder_pick = get_choice(base_of_ladder_choices_survivor, base_of_ladder_options)
+    else:
+        base_of_ladder_pick = get_choice(base_of_ladder_choices, base_of_ladder_options)
     if base_of_ladder_pick == "1":
         pick_sudden_death()
     elif base_of_ladder_pick == "2":
@@ -523,18 +428,8 @@ def pick_sudden_death():
         replay()
 
 def pick_treasure_room(): 
-    if treasure_room not in player.visited:
-        player.room_visited(treasure_room)
-        print(treasure_room)
-    else:
-        print(treasure_room_return)
-    print(player.__repr__())
-    treasure_room_pick = input(treasure_room_choices).strip()
     treasure_room_options = ["1", "2"]
-    if treasure_room_pick.lower() in exit_words:
-        return
-    while treasure_room_pick not in treasure_room_options:
-        treasure_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
+    treasure_room_pick = room_basic(treasure_room, treasure_room_return, treasure_room_choices, treasure_room_options)
     if treasure_room_pick == "1":
         if "key" in player.items:
             print(treasure_retrieval)
@@ -545,54 +440,6 @@ def pick_treasure_room():
             pick_treasure_room()
     elif treasure_room_pick == "2":
         pick_base_of_ladder()
-
-def pick_study_room(): 
-    if "candle" in player.items:
-        print(study_room_return_candle)
-        print(player.__repr__())
-        study_room_pick = input(study_room_choices_took_candle).strip()
-        if study_room_pick.lower() in exit_words:
-            return
-        while study_room_pick != "1":
-            study_room_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ").strip()
-        if study_room_pick == "1":
-            pick_lower_corridor()
-    else:
-        if study_room not in player.visited:
-            player.room_visited(study_room)
-            print(study_room)
-        else:
-            print(study_room_return_no_candle)
-        print(player.__repr__())
-        study_room_pick = input(study_room_choices).strip()
-        study_room_options = ["1", "2"]
-        if study_room_pick.lower() in exit_words:
-            return
-        while study_room_pick not in study_room_options:
-            study_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
-        if study_room_pick == "1":
-            pick_lower_corridor()
-        elif study_room_pick == "2":
-            print(study_room_candle)
-            player.add_item("candle")
-            print(player.__repr__())
-            study_room_pick = input(study_room_choices_post_candle).strip()
-            study_room_options_post_candle = ["1", "2"] 
-            if study_room_pick.lower() in exit_words:
-                return
-            while study_room_pick not in study_room_options_post_candle:
-                study_room_pick = input("Sorry, that is not a valid choice. Please select 1 or 2 to continue. ").strip()
-            if study_room_pick == "1":
-                print(check_study_room)
-                study_room_pick = input(study_room_choices_post_check).strip()
-                if study_room_pick.lower() in exit_words:
-                    return
-                while study_room_pick != "1":
-                    study_room_pick = input("Sorry, that is not a valid choice. Please select 1 to continue. ").strip()
-                if study_room_pick == "1":
-                    pick_lower_corridor()
-            elif study_room_pick == "2":
-                pick_lower_corridor()    
 
 def replay():
     restart = input("\nWould you like to play again? (Y/N) ").lower().strip()
