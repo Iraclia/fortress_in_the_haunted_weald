@@ -22,8 +22,10 @@ class Adventurer:
         self.visited.append(room)
 
 # establishes variations of yes/no that will be accepted
-positives = ["y", "yes", "yeah", "sure", "ok", "okay", "yep", "yah"]
-negatives = ["n", "no", "nah", "nope", "nu"]
+positives = ["y", "yes", "yeah", "sure", "ok", "okay", "yep", "yah", "yea", "yay"]
+negatives = ["n", "no", "nah", "nope", "nu", "nay"]
+
+#brief test
 
 # establishing words to exit the game at any point
 exit_words = ["exit", "stop", "leave", "quit", "terminate", "escape", "close"]
